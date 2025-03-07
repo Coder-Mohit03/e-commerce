@@ -59,11 +59,7 @@ module UserMod
     pass = gets.chomp
     user = users.find {|e| e.email==email && e.pass == pass}
     user&.status = 1
-    if(user)
-      1
-    else
-      0
-    end
+    user.role 
   end 
 
   def manage_profile(user)

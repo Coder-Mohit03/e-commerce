@@ -35,16 +35,22 @@ while(1)
   choice = gets.chomp
   case choice
     when "1" 
-      active = User.login(users)
-      if(active==1)
+      role = User.login(users)
+      if(role=="user")
         while(1)
           puts "Search product : 1, Product Listenings : 2, Filter Products : 3, Order product : 4"
           user_choice = gets.chomp
           case user_choice
             when "1" then Category.product_search(categories,products) 
-            when "2" then Product.product_listening(products)
+            when "2" then ProductClass.product_listening(products)
             when "3" then Category.product_filter(categories,products)
+            else
+              puts "default"
           end
+        end
+      elsif(role=="admin")
+        while(1)
+          puts "Add product : 1, Show categories : 2,"
         end
       else
         puts "you can not login"
