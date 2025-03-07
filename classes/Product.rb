@@ -1,10 +1,12 @@
 class Product
-  def initialize(product_name,cat,sub_cat,price,description)
+  attr_accessor :product_name,:cat,:sub_cat,:price,:description,:is_for_sale
+  def initialize(product_name,cat,sub_cat,price,description,is_for_sale=0)
     @product_name = product_name
     @cat = cat
     @sub_cat = sub_cat
     @price = price.to_i
     @description = description
+    @is_for_sale = is_for_sale
   end
 
   def self.add_product(products)
@@ -28,9 +30,17 @@ class Product
     products.push(Product.new(*values))
     p products[0]
   end
-  
-end
-products = []
 
-Product.add_product(products)
+  def self.product_listening(products) 
+    products_for_sale =  products.select {|product| product.is_for_sale==1}
+    puts "Items for sale: "
+    products_for_sale.each do |product|
+      puts "Name : #{product.product_name}, Price : #{product.price}"  
+    end
+  end
+end
+products = [Product.new("T-shirt","category","sub_cat",400,"lorem ipsum jeson",1),Product.new("sneaker","category","sub_cat",450,"lorem ipsum jeson",1),Product.new("jeans","category","sub_cat",550,"lorem ipsum jeson",0)]
+
+# Product.add_product(products)
+Product.product_listening(products)
 
