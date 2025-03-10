@@ -12,14 +12,15 @@ module UserMod
     while(1)
       print "Enter Email address : "
       email = gets.chomp
-      break if(email!='')
-      print "Invalid email, please try again - "
+      user_found = users.find {|user| user.email == email}
+      break if(email.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i) && user_found.nil?)
+      print "#{user_found.nil? ? 'Invalid email, please try again - ':'sorry email already registered, try again - '}\n"
     end
 
     while(1)
       print "Enter gender M(male)/F(female): "
-      gender = gets.chomp
-      break if(gender=="M" || gender=="F")
+      gender = gets.chomp.downcase
+      break if(gender=="m" || gender=="f")
       print "Invalid selection, please try again - "
     end
 
@@ -27,7 +28,7 @@ module UserMod
       while(1)
         print "Enter Password : "
         pass = gets.chomp
-        break if(pass.length>=5)
+        break if(pass.length>=5)     
         puts "password length must be 5" 
       end
       print "Confirm Password : "
@@ -37,16 +38,17 @@ module UserMod
     end
 
     user = User.new(name,email,gender,pass)
-    # aFile = File.open("users.csv",'a+')
-    # if aFile
-    #   user.instance_variables.each do |i|
-    #     puts i
-    #     a = eval("#{user}.#{i}")
-    #     puts a
-    #     aFile.write(a)
-    #   end
-    # end
-    # aFile.close
+
+    aFile = File.open("users.csv", 'a+')
+
+    if aFile
+      user.instance_variables.each do |var|
+        value = user.instance_variable_get(var)
+        aFile.write("#{value},")
+      end  
+      aFile.puts
+    end
+    aFile.close
     users.push(user)
     puts "Login your account"
     login(users)
