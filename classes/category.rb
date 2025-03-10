@@ -1,5 +1,5 @@
 # $LOAD_PATH << '.'
-require_relative '../modules/Category_module'
+require_relative '../modules/category_module'
 
 
 class Category

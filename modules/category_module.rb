@@ -67,4 +67,10 @@ module CategoryMod
     end
   end
   
+  def display_categories(categories)
+    categories.each_with_index do |category,i|
+      puts "#{i+1} = #{category.category_name}"
+    end
+  end
+
 end

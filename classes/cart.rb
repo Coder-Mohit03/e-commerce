@@ -5,5 +5,5 @@ class Cart
     @product_no = product_no
     @quantity = quantity
   end
-
+  
 end

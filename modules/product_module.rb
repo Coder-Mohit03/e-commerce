@@ -1,7 +1,8 @@
 module ProductMod
 
   def add_product(products)
-    list = {"product_name"=>nil,"cat"=>nil,"sub_cat"=>nil,"price"=>nil,"description"=>nil}
+    list = {"product_name"=>nil,"cat"=>nil,"price"=>nil,"brand"=>nil,"size"=>nil,"color"=>nil,"description"=>nil}
+    product_name,cat,product_no,price,brand,size,color,description,is_for_sale=0
     i=0
     keys = list.keys
     while(i<keys.length)
@@ -17,9 +18,19 @@ module ProductMod
       i+=1
     end
     values = list.values
-    
-    products.push(Product.new(*values))
-    p products[0]
+    product = ProductClass.new(*values)
+    aFile = File.open("products.csv","a+")
+    if aFile
+      product.instance_variables.each do |var|
+        value = instance_variable_get(var)
+        aFile.write("#{value},") 
+      end
+      aFile.puts
+    end
+    aFile.close
+
+    products.push(product)
+    # p products[0]
   end
 
   def product_listening(products) 
@@ -30,5 +41,27 @@ module ProductMod
     end
   end
 
+  def edit_product_value(products)
+    begin
+      print "enter product_no to update product : "
+      product_no = gets.chomp.to_i
+      product = products.find {|product| product.product_no==product_no}
+      product.edit_product(products)
+    rescue
+      print "invalid input , please try again - "
+      retry if product.nil?
+    end
+  end
+
+  def delete_product(products)
+    print "Enter product No. to delete the product : "
+    products.delete_if {|product| product.product_no==product_no}
+  end
+
+  def show_products(products)
+    products.each do |product|
+      product.display
+    end
+  end
 end
 

@@ -1,5 +1,5 @@
 # $LOAD_PATH << '.'
-require_relative '../modules/User_module'
+require_relative '../modules/user_module'
 class User
   attr_accessor :name,:email,:gender,:pass, :status,:role
   extend UserMod
