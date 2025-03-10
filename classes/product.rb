@@ -5,6 +5,7 @@ require_relative '../modules/product_module'
 class ProductClass 
 extend ProductMod
   attr_accessor :product_name,:cat,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
+  
   @@counter = 0
   def initialize(product_name,cat,price,brand,size,color,description,is_for_sale=0,quantity=1)
     @@counter+=1

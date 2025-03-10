@@ -39,19 +39,17 @@ module UserMod
 
     user = User.new(name,email,gender,pass)
 
-    aFile = File.open("users.csv", 'a+')
+  #   aFile = File.open("users.csv", 'a+')
 
-    if aFile
-      user.instance_variables.each do |var|
-        value = user.instance_variable_get(var)
-        aFile.write("#{value},")
-      end  
-      aFile.puts
-    end
-    aFile.close
+  #   if aFile
+  #     user.instance_variables.each do |var|
+  #       value = user.instance_variable_get(var)
+  #       aFile.write("#{value},")
+  #     end  
+  #     aFile.puts
+  #   end
+  #   aFile.close
     users.push(user)
-    puts "Login your account"
-    login(users)
   end
 
   def login(users)

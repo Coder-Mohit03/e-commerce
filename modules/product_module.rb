@@ -2,7 +2,6 @@ module ProductMod
 
   def add_product(products)
     list = {"product_name"=>nil,"cat"=>nil,"price"=>nil,"brand"=>nil,"size"=>nil,"color"=>nil,"description"=>nil}
-    product_name,cat,product_no,price,brand,size,color,description,is_for_sale=0
     i=0
     keys = list.keys
     while(i<keys.length)
@@ -19,15 +18,15 @@ module ProductMod
     end
     values = list.values
     product = ProductClass.new(*values)
-    aFile = File.open("products.csv","a+")
-    if aFile
-      product.instance_variables.each do |var|
-        value = instance_variable_get(var)
-        aFile.write("#{value},") 
-      end
-      aFile.puts
-    end
-    aFile.close
+    # aFile = File.open("products.csv","a+")
+    # if aFile
+    #   product.instance_variables.each do |var|
+    #     value = instance_variable_get(var)
+    #     aFile.write("#{value},") 
+    #   end
+    #   aFile.puts
+    # end
+    # aFile.close
 
     products.push(product)
     # p products[0]
