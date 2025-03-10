@@ -55,7 +55,16 @@ module ProductMod
 
   def delete_product(products)
     print "Enter product No. to delete the product : "
-    products.delete_if {|product| product.product_no==product_no}
+    product_no = gets.chomp.to_i
+    deleted_element = nil
+
+    products.each do |product|
+      if(product.product_no == product_no)
+        deleted_element = products.delete(product)
+      end
+    end     
+    puts deleted_element
+    print "#{deleted_element==nil ? 'invalid product id or not found':'product deleted successfully'}\n"
   end
 
   def show_products(products)

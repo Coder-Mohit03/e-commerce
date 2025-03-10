@@ -52,11 +52,15 @@ while(1)
         end
       elsif(role=="admin")
         while(1)
-          puts "Add product : 1, Show categories : 2, Show users : 3, update product : 4, show products : 5"
+          puts "\nAdd product : 1, Show categories : 2, Show users : 3, update product : 4, show products : 5, Delete product : 6\n"
+          print "please enter your choice : "
           admin_choice = gets.chomp
           case admin_choice
             when "1" then ProductClass.add_product(products)
             when "2" then Category.display_categories(categories)
+
+            when "3" then User.show_users(users)
+
             when "4" then ProductClass.edit_product_value(products)
             when "5" then ProductClass.show_products(products)
             when "6" then ProductClass.delete_product(products)

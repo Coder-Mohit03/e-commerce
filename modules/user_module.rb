@@ -65,7 +65,15 @@ module UserMod
   end 
 
   def manage_profile(user)
-    user.display
+    user.display if user.role=="user"
     # puts "what do you want to update : "
   end
+
+  def show_users(users)
+    puts "user's list"
+    users.each do |user|
+      user.display if user.role != "admin"
+    end
+  end
+
 end
