@@ -24,72 +24,96 @@ Category.new("t-shirt"),
 Category.new("shoes")
 ]
 users = [
-User.new("mohit","mohit@gmail.com","M","pass1",1),
-User.new("admin","admin@gmail.com","M","admin1",1,"admin")          
+# User.new("mohit","mohit@gmail.com","M","pass1"),
+# User.new("admin","admin@gmail.com","M","admin1","admin")          
 ]
 orders = []
 cart = []
 
 def user_dashboard(products,categories,users,cart)
-  print "\nWelcome to user dashboard - \n"
+  c=0
   while(1)
-    puts "\n\nSearch product : 1, Product Listenings : 2, Filter Products : 3, add to cart : 4, show cart - 5, order checkout - 6 \n"
+    puts "\nSearch product: 1\nProduct Listenings: 2\nFilter Products: 3\nadd to cart: 4\nshow cart: 5\norder checkout: 6\nLog Out: 7"
+    print "\nEnter your choice : "
     user_choice = gets.chomp
     case user_choice
       when "1"
        Category.product_search(categories,products) 
       when "2" 
-        ProductClass.product_listening(products)
+        ProductClass.product_on_sale(products)
       when "3" 
         Category.product_filter(categories,products)
       when "4"
         Cart.add_to_cart(products,users,cart)
       when "5"
         Cart.show_cart(cart)
-      when
+      when "6"
         Cart.checkout(cart,orders,products)
+      when "7"
+        return
       else
-        puts "default"
+        c+=1
+        puts "invalid request"
+    end
+    if c==4
+      puts "logged out! because you crossed the limit of input\n"
+      return
     end
   end
 end
 
+def admin_dashboard(products,categories)
+  c=0
+  while(1)
+    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nupdate product : 4\nshow products : 5\nDelete product : 6\nLog Out : 7\n"
+    print "please enter your choice : "
+    admin_choice = gets.chomp
+    case admin_choice
+      when "1" then ProductClass.add_product(products)
+      when "2" then Category.display_categories(categories)
+      when "3" then User.show_users
+      when "4" then ProductClass.edit_product_value(products)
+      when "5" then ProductClass.show_products(products)
+      when "6" then ProductClass.delete_product(products)
+      else
+        c+=1
+        puts "\ninvalid choice, please try again \n"
+    end
+    if c==4
+      puts "logged out! because you crossed the limit of input\n"
+      return 
+    end
+  end
+end
+
+
 while(1)
   puts "Welcome to e-commerce website"
-  puts "Already have an account press 1 to login \nor Press 2 to register\n"
+  puts "login your account: 1\nRegister New User: 2\nCreate new admin account: 3"
   print "\nEnter your choice : "
   choice = gets.chomp
   case choice
     when "1" 
-      role = User.login(users)
+      role = User.login
       if(role=="user")
-        print "\nEnter your choice : "
         user_dashboard(products,categories,users,cart)
       elsif(role=="admin")
-        while(1)
-          puts "\nWelcome to admin dashboard - \n"
-          puts "\nAdd product : 1, Show categories : 2, Show users : 3, update product : 4, show products : 5, Delete product : 6\n"
-          print "please enter your choice : "
-          admin_choice = gets.chomp
-          case admin_choice
-            when "1" then ProductClass.add_product(products)
-            when "2" then Category.display_categories(categories)
-
-            when "3" then User.show_users(users)
-
-            when "4" then ProductClass.edit_product_value(products)
-            when "5" then ProductClass.show_products(products)
-            when "6" then ProductClass.delete_product(products)
-            else
-              puts "\ninvalid choice, please try again \n"
-          end
-        end
+        admin_dashboard
       else
         puts "you can not login"
       end
     when "2" 
-      User.register(users)
+      User.register("user")
       user_dashboard(products,categories,users,cart)
+    when "3" 
+      key = "xyz"
+      print "Enter password to create user: "
+      input_key = gets.chomp
+      if input_key!=key
+        print "invalid password" 
+      else
+      User.register("admin") 
+      end
     else 
       puts "invalid choice, please try again \n"
   end

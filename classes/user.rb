@@ -3,12 +3,11 @@ require_relative '../modules/user_module'
 class User
   attr_accessor :name,:email,:gender,:pass, :status,:role
   extend UserMod
-  def initialize(name,email,gender,pass,status=0,role="user")
+  def initialize(name,email,gender,pass,role="user")
     @name = name
     @email = email
     @gender = gender
     @pass = pass
-    @status = status
     @role = role
   end
   
@@ -16,7 +15,9 @@ class User
     puts "Name = #{@name}, Email = #{@email}, Gender = #{@gender}"
   end
 
-
+  def write_in_file
+    "#{name},#{email},#{gender},#{pass},#{role}"
+  end
 end
 
 
