@@ -9,10 +9,8 @@ class Category
     @category_name = category_name.downcase
   end
   
-  def display_categories(categories)
-    categories.each_with_index do |category,i|
-      puts "#{i+1} = #{category}"
-    end
+  def write_in_file
+    "#{category_name}"
   end
 
 end

@@ -1,5 +1,34 @@
 module CategoryMod
 
+  def add_category
+    begin
+      print "Enter Category Name: "
+      input_category = gets.chomp
+      raise if input_category=="" || !input_category.match?(/^[a-zA-Z]+$/)
+    rescue
+      print "Invalid Category or field could not be empty\n"
+      retry
+    end
+    lines = File.readlines("csv_files/categories.csv")
+    aFile = File.open("csv_files/categories.csv","a+")
+    flag = false
+    if aFile
+      lines.each do |line|
+        category = line.chomp
+        if category==input_category
+          flag = true
+        end
+      end
+      if flag==true
+        puts "Category already exist!"
+      else
+        aFile.puts input_category
+        puts "Category Added Successfully"
+      end
+    end
+    aFile.close
+  end
+
   def product_search(categories,products)
     while(1)
       print "Enter category / product name: "
@@ -73,4 +102,5 @@ module CategoryMod
     end
   end
 
+  
 end

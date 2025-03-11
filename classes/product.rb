@@ -4,13 +4,13 @@ require_relative '../modules/product_module'
 
 class ProductClass 
 extend ProductMod
-  attr_accessor :product_name,:cat,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
+  attr_accessor :product_name,:category,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
   
   @@counter = 0
-  def initialize(product_name,cat,price,brand,size,color,description,is_for_sale=0,quantity=1)
+  def initialize(product_name,category,price,brand,size,color,description,is_for_sale=0,quantity=1)
     @@counter+=1
     @product_name = product_name.downcase
-    @cat = cat.downcase
+    @category = category.downcase
     @product_no = @@counter
     @price = price.to_i
     @brand = brand.downcase
@@ -21,7 +21,7 @@ extend ProductMod
     @quantity = quantity
   end
   def display
-    puts "Product name : #{product_name}, Price : #{price}, color = #{color}, size : #{size},  description : #{description}, product_no : #{product_no}"
+    puts "Product Name : #{product_name}, Price : #{price}, Color = #{color}, Size : #{size},  Description : #{description}, Product No : #{product_no}"
   end
 
   def edit_product(products)
@@ -44,6 +44,10 @@ extend ProductMod
       retry
     end
   end
+
+  def write_in_file
+    "#{product_name},#{category},#{product_no},#{price},#{brand},#{size},#{color},#{description},#{is_for_sale},#{quantity}"
+  end
 end
 
 
@@ -51,5 +55,5 @@ end
 # Product.add_product(products)
 # ProductClass.product_listening(products)
 
-# Category.product_search(categories,products)
-# Category.product_filter(categories,products)
+# Category.product_search(categoryegories,products)
+# Category.product_filter(categoryegories,products)

@@ -1,5 +1,5 @@
 module UserMod
-  def register(users)
+  def register(role)
     pass = 
     cp = 
     gender = 
@@ -11,10 +11,21 @@ module UserMod
     end
     while(1)
       print "Enter Email address : "
-      email = gets.chomp
-      user_found = users.find {|user| user.email == email}
-      break if(email.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i) && user_found.nil?)
-      print "#{user_found.nil? ? 'Invalid email, please try again - ':'sorry email already registered, try again - '}\n"
+      input_email = gets.chomp
+      a = true
+      lines = File.readlines("csv_files/users.csv")
+      aFile = File.open("csv_files/users.csv","r+")
+      if aFile
+        lines.each do |line|
+          name,email,gender,pass,role = line.chomp.split(",")
+          if input_email==email
+            a= false
+          end
+        end
+      end
+      # user_found = users.find {|user| user.email == email}
+      break if(input_email.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i) && a==true)
+      print "#{a==true ? 'Invalid email, please try again - ':'sorry email already registered, try again - '}\n"
     end
 
     while(1)
@@ -37,29 +48,30 @@ module UserMod
       break if(pass==cp && pass!='' && cp!='')
     end
 
-    user = User.new(name,email,gender,pass)
+    user = User.new(name,email,gender,pass,role)
 
-  #   aFile = File.open("users.csv", 'a+')
+    aFile = File.open("users.csv", 'a+')
 
-  #   if aFile
-  #     user.instance_variables.each do |var|
-  #       value = user.instance_variable_get(var)
-  #       aFile.write("#{value},")
-  #     end  
-  #     aFile.puts
-  #   end
-  #   aFile.close
-    users.push(user)
+    if aFile
+      values = user.write_in_file
+      aFile.puts values
+    end
   end
 
-  def login(users)
+  def login()
     print "Enter email : "
-    email = gets.chomp
+    input_email = gets.chomp
     print "Enter password : "
-    pass = gets.chomp
-    user = users.find {|e| e.email==email && e.pass == pass}
-    user&.status = 1
-    user&.role 
+    input_pass = gets.chomp
+    lines = File.readlines("csv_files/users.csv")
+    File.open("csv_files/users.csv","r") do |file|
+      lines.each do |line|
+        name,email,gender,pass,role = line.chomp.split(",")
+        if email == input_email && pass.to_s == input_pass
+          return role 
+        end
+      end
+    end
   end 
 
   def manage_profile(user)
@@ -67,11 +79,17 @@ module UserMod
     # puts "what do you want to update : "
   end
 
-  def show_users(users)
+  def show_users
     puts "user's list"
-    users.each do |user|
-      user.display if user.role != "admin"
+    lines = File.readlines("csv_files/users.csv")
+    File.open("csv_files/users.csv","r") do |file|
+      lines.each do |line|
+        name,email,gender,pass,role = line.chomp.split(",")
+        puts "Name: #{name}, Email: #{email}, Gender: #{gender}"
+      end
     end
   end
+
+  
 
 end

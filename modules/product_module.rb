@@ -1,38 +1,58 @@
 module ProductMod
 
-  def add_product(products)
-    list = {"product_name"=>nil,"cat"=>nil,"price"=>nil,"brand"=>nil,"size"=>nil,"color"=>nil,"description"=>nil}
+  def add_product
+    list = {"product Name"=>nil,"Category"=>nil,"Price"=>nil,"Brand"=>nil,"Size"=>nil,"Color"=>nil,"Description"=>nil}
     i=0
     keys = list.keys
     while(i<keys.length)
-      print "Please enter #{keys[i]} : "
+      print "Please enter #{keys[i]} "
       list["#{keys[i]}"] = gets.chomp
-      if(keys[i]=="price" && !list["#{keys[i]}"].match?(/^\$?\d{1,3}(?:,\d{3})*(?:\.\d{2})?$/))
-        print "warning : invalid - "
-        redo 
-      elsif(list["#{keys[i]}"]=="")
-        print "warning : invalid - "
+      if(list["#{keys[i]}"]=="")
+        puts "warning :Field can not be empty - "
         redo
+      elsif(keys[i]=="Size" && !list["#{keys[i]}"].match?(/\d{2}/))
+        puts "\nwarning : invalid size -"
+        redo
+      elsif(keys[i]=="product Name" && !list["#{keys[i]}"].match?(/[a-zA-Z ]/))
+        puts "\nwarning : product name can only contains alphabates -"
+        redo
+      elsif(keys[i]=="Color" && !list["#{keys[i]}"].match?(/^(blue|black|white|red)$/))
+        puts "\nPlease add color in blue,black,white,red"
+        redo
+      elsif(keys[i]=="Category")
+        lines = File.readlines("csv_files/categories.csv")
+        aFile = File.open("csv_files/categories.csv","r+")
+        c = false
+        if aFile
+          lines.each do |line|
+            category = line.chomp
+            if category==list["#{keys[i]}"]
+              c = true
+            end
+          end
+          if c == false
+            puts "sorry category not found!\n"
+            redo
+          end
+        end
+      elsif(keys[i]=="Price" && !list["#{keys[i]}"].match?(/^\$?\d{1,3}(?:,\d{3})*(?:\.\d{2})?$/))
+        puts "warning : invalid Price - "
+        redo 
       end
       i+=1
     end
     values = list.values
     product = ProductClass.new(*values)
-    # aFile = File.open("products.csv","a+")
-    # if aFile
-    #   product.instance_variables.each do |var|
-    #     value = instance_variable_get(var)
-    #     aFile.write("#{value},") 
-    #   end
-    #   aFile.puts
-    # end
-    # aFile.close
-
-    products.push(product)
-    # p products[0]
+    aFile = File.open("csv_files/products.csv","a+")
+    if aFile
+      values = product.write_in_file
+      aFile.puts values
+    end
+    aFile.close
+    puts "\nProduct added successfully - "
   end
 
-  def product_listening(products) 
+  def product_on_sale(products) 
     products_for_sale =  products.select {|product| product.is_for_sale==1}
     puts "Items for sale: "
     products_for_sale.each do |product|

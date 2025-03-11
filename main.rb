@@ -19,9 +19,9 @@ ProductClass.new("puma-jeans","jeans",750,"puma","8","blue","lorem ipsum jeson",
 
 
 categories = [
-Category.new("jeans"),
-Category.new("t-shirt"),
-Category.new("shoes")
+# Category.new("jeans"),
+# Category.new("t-shirt"),
+# Category.new("shoes")
 ]
 users = [
 # User.new("mohit","mohit@gmail.com","M","pass1"),
@@ -50,6 +50,7 @@ def user_dashboard(products,categories,users,cart)
       when "6"
         Cart.checkout(cart,orders,products)
       when "7"
+        print "you logged out"
         return
       else
         c+=1
@@ -65,16 +66,20 @@ end
 def admin_dashboard(products,categories)
   c=0
   while(1)
-    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nupdate product : 4\nshow products : 5\nDelete product : 6\nLog Out : 7\n"
+    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nupdate product : 4\nshow products : 5\nDelete product : 6\nLog Out : 7\nAdd Category : 8"
     print "please enter your choice : "
     admin_choice = gets.chomp
     case admin_choice
-      when "1" then ProductClass.add_product(products)
+      when "1" then ProductClass.add_product
       when "2" then Category.display_categories(categories)
       when "3" then User.show_users
       when "4" then ProductClass.edit_product_value(products)
       when "5" then ProductClass.show_products(products)
       when "6" then ProductClass.delete_product(products)
+      when "7"
+        print "you logged out"
+        return
+      when "8" then Category.add_category
       else
         c+=1
         puts "\ninvalid choice, please try again \n"
@@ -98,7 +103,7 @@ while(1)
       if(role=="user")
         user_dashboard(products,categories,users,cart)
       elsif(role=="admin")
-        admin_dashboard
+        admin_dashboard(products,categories)
       else
         puts "you can not login"
       end
