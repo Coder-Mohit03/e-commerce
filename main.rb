@@ -4,17 +4,7 @@ require_relative 'classes/category'
 require_relative 'classes/cart'
 
 products =[
-ProductClass.new("yk_t-shirt","t-shirt",400,"yk","m","red","lorem ipsum jeson",1,4),
-ProductClass.new("yk_t-shirt_new","t-shirt",450,"yk","m","red","lorem ipsum jeson",1,2),
-ProductClass.new("jm_t-shirt","t-shirt",400,"jm","s","black","lorem ipsum jeson",1,3),
-ProductClass.new("jm_t-shirt20","t-shirt",400,"jm","l","white","lorem ipsum jeson",1,4),
-ProductClass.new("HMF-jeans","jeans",550,"HMF","28","black","lorem ipsum jeson",0,2),
-ProductClass.new("DJ-jeans","jeans",550,"DJ","30","blue","lorem ipsum jeson",1,10),
-ProductClass.new("MRF-jeans","jeans",550,"MRF","32","black","lorem ipsum jeson",0,5),
-ProductClass.new("sneaker","shoes",100,"SNG","7","purple","lorem ipsum jeson",0,4),
-ProductClass.new("sneaker26","shoes",150,"SNG","8","white","lorem ipsum jeson",1,3),
-ProductClass.new("meta-360","shoes",200,"meta","7","black","lorem ipsum jeson",0,2),
-ProductClass.new("puma-jeans","jeans",750,"puma","8","blue","lorem ipsum jeson",0,4)
+
 ]
 
 
@@ -33,18 +23,18 @@ cart = []
 def user_dashboard(products,categories,users,cart)
   c=0
   while(1)
-    puts "\nSearch product: 1\nProduct Listenings: 2\nFilter Products: 3\nadd to cart: 4\nshow cart: 5\norder checkout: 6\nLog Out: 7"
+    puts "\nSearch product: 1\nProduct Listings: 2\nFilter Products: 3\nadd to cart: 4\nshow cart: 5\norder checkout: 6\nLog Out: 7"
     print "\nEnter your choice : "
     user_choice = gets.chomp
     case user_choice
       when "1"
-       Category.product_search(categories,products) 
+       Category.product_search
       when "2" 
-        ProductClass.product_on_sale(products)
+        ProductClass.product_on_sale
       when "3" 
-        Category.product_filter(categories,products)
+        Category.product_filter
       when "4"
-        Cart.add_to_cart(products,users,cart)
+        Cart.add_to_cart
       when "5"
         Cart.show_cart(cart)
       when "6"
@@ -66,16 +56,16 @@ end
 def admin_dashboard(products,categories)
   c=0
   while(1)
-    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nupdate product : 4\nshow products : 5\nDelete product : 6\nLog Out : 7\nAdd Category : 8"
+    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nshow products : 5\nDelete product : 6\nLog Out : 7\nAdd Category : 8"
     print "please enter your choice : "
     admin_choice = gets.chomp
     case admin_choice
       when "1" then ProductClass.add_product
-      when "2" then Category.display_categories(categories)
+      when "2" then Category.display_categories
       when "3" then User.show_users
-      when "4" then ProductClass.edit_product_value(products)
-      when "5" then ProductClass.show_products(products)
-      when "6" then ProductClass.delete_product(products)
+      # when "4" then ProductClass.edit_product_value
+      when "5" then ProductClass.show_products
+      when "6" then ProductClass.delete_product
       when "7"
         print "you logged out"
         return

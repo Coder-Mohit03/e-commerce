@@ -29,7 +29,7 @@ module CategoryMod
     aFile.close
   end
 
-  def product_search(categories,products)
+  def product_search
     while(1)
       print "Enter category / product name: "
       search_key = gets.chomp.downcase
@@ -37,16 +37,32 @@ module CategoryMod
       print "Invalid name, please try again - "
     end
 
-    search = categories.find {|category| category.category_name==search_key}
-    if(search.nil?)
-      product = products.find {|product| product.product_name==search_key}
-      product.display
-    else
-      cat_items = products.select {|product| product.cat==search_key }
-      cat_items.each do |item|
-        item.display
+
+    aFile = File.open("csv_files/products.csv","r+")
+    if aFile
+      aFile.each_line do |line|
+        product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+        array = line.chomp.split(",")
+
+        array.each do |word|
+          if word.include?(search_key)
+            puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}" 
+            break
+          end
+        end
       end
     end
+
+    # search = categories.find {|category| category.category_name==search_key}
+    # if(search.nil?)
+    #   product = products.find {|product| product.product_name==search_key}
+    #   product.display
+    # else
+    #   cat_items = products.select {|product| product.cat==search_key }
+    #   cat_items.each do |item|
+    #     item.display
+    #   end
+    # end
   end
 
   def product_filter(categories,products)
@@ -96,10 +112,15 @@ module CategoryMod
     end
   end
   
-  def display_categories(categories)
-    categories.each_with_index do |category,i|
-      puts "#{i+1} = #{category.category_name}"
+  def display_categories
+    lines = File.readlines("csv_files/categories.csv")
+    aFile = File.open("csv_files/categories.csv","r+")
+    if aFile
+      lines.each do |line|
+        puts line
+      end
     end
+    aFile.close
   end
 
   

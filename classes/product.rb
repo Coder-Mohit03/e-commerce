@@ -6,7 +6,7 @@ class ProductClass
 extend ProductMod
   attr_accessor :product_name,:category,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
   
-  @@counter = 0
+  @@counter = 2
   def initialize(product_name,category,price,brand,size,color,description,is_for_sale=0,quantity=1)
     @@counter+=1
     @product_name = product_name.downcase

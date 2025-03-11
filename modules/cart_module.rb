@@ -1,29 +1,45 @@
 module CartMod
-  def add_to_cart(products,users,cart)
+
+  def add_to_cart
     # _product_no = 
-    # _quantity = 
     while(1)
       print "Enter the product number to add to the cart: "
-      product_no = gets.chomp
-      product = products.find {|product| product.product_no==product_no.to_i}
-      if(product_no.match?(/[0-9]/) && !product.nil?)
-        break
+      inp_product_no = gets.chomp
+      flag = false
+      lines = File.readlines("csv_files/products.csv")
+      aFile = File.open("csv_files/products.csv","r+")
+      if aFile
+        lines.each do |line|
+          product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+          if product_no == inp_product_no
+            flag = true
+            quantity_check(quantity,product_no,product_name,price)
+            break
+          end
+        end
       end
-      print "#{product.nil? ? 'Sorry product not found, enter correct number - ':'wrong input, try again - ' }\n"
+      if(flag == true)
+        break
+      else
+        print "Sorry product not found, enter correct number - \n"
+      end
     end
-
+  end
+  def quantity_check(quant,product_no,product_name,price)
     while(1)
       print "Enter the quantity: "
       quantity = gets.chomp
-      break if(product.quantity >= quantity.to_i && quantity.match?(/[0-9]/) )
-      print "#{product.nil? ? 'you entered wrong quantity limit, try again - ':'wrong input, try again - ' }\n"
+      break if(quant >= quantity && quantity.match?(/[0-9]/) )
+      print "#{quantity.nil? ? 'decrease quantity limit, out of stock, try again - ':'wrong input, try again - ' }\n"
     end
-    product = Cart.new(product_no,quantity,product.product_name,product.price)
-    cart.push(product)
-    puts "product added to the cart"
+    product = Cart.new(product_no,quantity,product_name,price)
+    File.open("csv_files/cart.csv","a+") do |file|
+      file.puts product.write_in_file
+      puts "Product added to the cart"
+    end
   end
 
-  def show_cart(cart)
+  def show_cart
     puts "\nCart:"
     cart.each do |product|
       product.display
@@ -73,13 +89,39 @@ module CartMod
       break if cvv_no.match?(/^\d{3}$/)
       print "invalid cvv no. or it could not be empty - "
     end
-
-    order_product_no_arr = cart.select {|product| product.product_no }
+    lines = File.readlines("csv_files/cart.csv")
+    aFile = File.open("csv_files/cart.csv","r+")
+    order_product_no_arr = []
+    if aFile
+      lines.each do |line|
+        product_no,quantity,product_name,price = line.chomp.split(",")
+        order_product_no_arr.push({"product_no"=>product_no,"quant"=>quantity})
+      end
+    end
+    bFile = File.open("csv_files/products.csv","w+")
+    b_lines = File.readlines("csv_files/products.csv")
+    total_amount=0
+    if bFile
+      b_lines.each do |line|
+        while(i<order_product_no_arr.length)
+          product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity = line.chomp.split(",")
+          if order_product_no_arr["product_no"] == product_no
+            quantity -= order_product_no_arr["quant"]
+            total_amount+=price
+            aFile.puts line if quantity!=0
+          else
+            aFile.puts line
+          end
+        end
+      end
+    end
+    # order_product_no_arr = cart.select {|product| product.product_no }
     
-    puts order_product_no_arr
+    # puts order_product_no_arr
 
     # order = Order.new()
     # orders.push()
 
   end
+
 end
