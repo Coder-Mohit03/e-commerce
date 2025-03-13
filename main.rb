@@ -7,7 +7,21 @@ require_relative 'classes/order'
 orders = []
 cart = []
 
+def manage_cart(person,cart)
+  lines = File.readlines("csv_files/cart.csv")
+  lines.each do |line|
+   if line[4].to_i == person.user_id
+    new_product =  Cart.new(line.chomp)
+    puts new_product
+    cart.push(new_product)
+   end
+  end
+end
+
+
+
 def user_dashboard(cart,orders,person)
+  manage_cart(person,cart)
   while(1)
     puts "\nWelcome To Main Menu - "
     puts "\nSearch product: 1\nProduct Listings: 2\nshow cart: 3\norder checkout: 4\nLog Out: 5\nOrder History : 6\nPersonal Information : 7"
@@ -17,55 +31,55 @@ def user_dashboard(cart,orders,person)
     case user_choice
       when "1"
         while(1)
-          Category.product_search if c == 0 
+          Category.product_search if count == 0 
           puts "Add to cart: 1\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "1" 
               Cart.add_to_cart(cart,person)
-              c+=1
+              count+=1
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
        
       when "2" 
         while(1)
-          ProductClass.product_listnings if c == 0 
+          ProductClass.product_listings if count == 0 
           puts "Add to cart: 1\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "1" 
               Cart.add_to_cart(cart,person)
-              c+=1
+              count+=1
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
         
       when "3"
         while(1)
-          Cart.show_cart(cart) if c == 0 
+          Cart.show_cart(cart) if count == 0 
           puts "\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
         
       when "4"
         while(1)
-          Cart.checkout(cart,orders) if c == 0 
+          Cart.checkout(cart,orders) if count == 0 
           cart = []
           puts "\nBack to main menu: 0"
           puts "\nEnter your Choice : "
@@ -73,7 +87,7 @@ def user_dashboard(cart,orders,person)
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
@@ -82,40 +96,39 @@ def user_dashboard(cart,orders,person)
         return
       when "6"
         while(1)
-          Order.order_history(orders) if c == 0 
+          Order.order_history(orders) if count == 0 
           puts "\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
       when "7"
         while(1)
-          person.display_user if c == 0 
+          person.display_user if count == 0 
           puts "\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
       else
         cart = []
         orders = []
-        c+=1
+        count+=1
         puts "invalid request"
     end
     if c==4
       puts "logged out! because you crossed the limit of input\n"
-      return  puts "\nWelcome to e-commerce website"
-
+      return
     end
   end
 end
@@ -129,93 +142,90 @@ def admin_dashboard
     case admin_choice
       when "1" 
         while(1)
-          ProductClass.add_product if c == 0 
+          ProductClass.add_product if count == 0 
           puts "Add More product: 1\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "1" 
               ProductClass.add_product
-              c+=1
+              count+=1
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end
         end
       when "2" 
         while(1)
-          Category.display_categories if c == 0 
+          Category.display_categories if count == 0 
           puts "Back to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end
         end
       when "3" 
-        while(1)  puts "\nWelcome to e-commerce website"
-
-          User.show_users if c == 0 
+        while(1)
+          User.show_users if count == 0 
           puts "Back to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
       when "5"
         while(1)
-          ProductClass.show_products if c == 0 
+          ProductClass.show_products if count == 0 
           puts "Back to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
           case input
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
       when "6"
         while(1)
-          ProductClass.delete_product if c == 0 
+          ProductClass.delete_product if count == 0 
           puts "Delete More product: 1\nBack to main menu: 0"
           input = gets.chomp
           case input
             when "1" 
-              Prod  puts "\nWelcome to e-commerce website"
-              uctClass.delete_product
-              c+=1
+              ProductClass.delete_product
+              count+=1
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end  
         end
       when "7"
  
-        print "\nyou lo  puts "\nWelcome to e-commerce website"
-gged out\n"
+        print "\nyou logged out\n"
         return
       when "8" 
         while(1)
-          Category.add_category if c == 0 
+          Category.add_category if count == 0 
           puts "Add More Category: 1\nBack to main menu: 0"
           input = gets.chomp
           case input
             when "1" 
               Category.add_category
-              c+=1
+              count+=1
             when "0" then break
             else
-              c+=1
+              count+=1
               puts "invalid input"
           end 
         end
@@ -225,7 +235,7 @@ gged out\n"
   end
 end
 
-choice
+
 while(1)
   puts "\nWelcome to e-commerce website"
   puts "login your account: 1\nRegister New User: 2\nCreate new admin account: 3"
@@ -257,13 +267,13 @@ while(1)
         print "Enter password to create Admin: "
         input_key = gets.chomp
         if input_key!=key
-          c+=1
+          count+=1
           if c==3
-            puts "max attempt limit exceeded try again later - "
+            puts "max attempt limit exceeded try again letter - "
             break
           end
           print "incorrect password try again - " 
-        elsepassword
+        else
         output = User.register("admin")
         puts "Admin Registered Successfully!" if output != 0
         break 
