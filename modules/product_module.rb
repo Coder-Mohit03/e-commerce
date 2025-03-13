@@ -1,22 +1,33 @@
 module ProductMod
 
   def add_product
+    lines = File.readlines("csv_files/categories.csv")
+    aFile = File.open("csv_files/categories.csv","r+")
+    if lines.length!=0
+      puts "\nHere is the list of categories-\n"
+      if aFile
+        lines.each do |line|
+          puts line
+        end
+      end
+      aFile.close
+    end
     list = {"product Name"=>nil,"Category"=>nil,"Price"=>nil,"Brand"=>nil,"Size"=>nil,"Color"=>nil,"Description"=>nil}
     i=0
     keys = list.keys
     while(i<keys.length)
-      print "Please enter #{keys[i]} "
+      print "Please enter #{keys[i] == "Color" ? "Color in blue,black,white,red" : keys[i]=="Size" ? "size only 1 or 2 digits allowed": keys[i] } "
       list["#{keys[i]}"] = gets.chomp
       if(list["#{keys[i]}"]=="")
         puts "warning :Field can not be empty - "
         redo
-      elsif(keys[i]=="Size" && !list["#{keys[i]}"].match?(/\d{2}/))
-        puts "\nwarning : invalid size -"
+      elsif(keys[i]=="Size" && !list["#{keys[i]}"].match(/^\d{1,2}$/))
+        puts "\nwarning : invalid size only 1 or 2 digits allowed - "
         redo
-      elsif(keys[i]=="product Name" && !list["#{keys[i]}"].match?(/[a-zA-Z ]/))
+      elsif(keys[i]=="product Name" && !list["#{keys[i]}"]&.match(/[a-zA-Z ]/))
         puts "\nwarning : product name can only contains alphabates -"
         redo
-      elsif(keys[i]=="Color" && !list["#{keys[i]}"].match?(/^(blue|black|white|red)$/))
+      elsif(keys[i]=="Color" && !list["#{keys[i]}"].match(/^(blue|black|white|red)$/))
         puts "\nPlease add color in blue,black,white,red"
         redo
       elsif(keys[i]=="Category")
@@ -35,7 +46,7 @@ module ProductMod
             redo
           end
         end
-      elsif(keys[i]=="Price" && !list["#{keys[i]}"].match?(/^\$?\d{1,3}(?:,\d{3})*(?:\.\d{2})?$/))
+      elsif(keys[i]=="Price" && !list["#{keys[i]}"].match?(/^\d{2,4}$|^10000$/))
         puts "warning : invalid Price - "
         redo 
       end
@@ -52,15 +63,17 @@ module ProductMod
     puts "\nProduct added successfully - "
   end
 
-  def product_on_sale 
-    puts "Items for sale: "
+  def product_listnings
     lines = File.readlines("csv_files/products.csv")
     File.open("csv_files/products.csv","r") do |file|
+      if lines.length!=0
+        puts "Products Listings : " 
+      else
+        puts "Sorry, No products available right now"
+      end
       lines.each do |line|
         product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
-        if is_for_sale == "1"
           puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}" 
-        end
         # puts line
       end
     end
@@ -77,7 +90,6 @@ module ProductMod
           if inp_product_no==product_no
             print "what do you want to update from the product: "
               update_key = gets.chomp
-
           end
         end
       end
@@ -112,7 +124,7 @@ module ProductMod
     File.open("csv_files/products.csv","r+") do |file|
       lines.each do |line|
         product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
-          puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}" 
+          puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}, Quantity: #{quantity}" 
       end
     end
   end

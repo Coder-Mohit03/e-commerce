@@ -2,12 +2,13 @@ require_relative '../modules/cart_module'
 
 class Cart 
   extend CartMod
-  attr_accessor :product_name,:quantity,:product_no,:price
-  def initialize(product_no,quantity,product_name,price)
+  attr_accessor :product_name,:quantity,:product_no,:price,:user_id
+  def initialize(product_no,quantity,product_name,price,user_id)
     @product_no = product_no
     @quantity = quantity
     @product_name = product_name
     @price = price
+    @user_id = user_id
   end
 
   def display

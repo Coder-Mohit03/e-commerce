@@ -12,5 +12,5 @@ class Category
   def write_in_file
     "#{category_name}"
   end
-
+  
 end

@@ -6,9 +6,9 @@ class ProductClass
 extend ProductMod
   attr_accessor :product_name,:category,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
   
-  @@counter = 2
   def initialize(product_name,category,price,brand,size,color,description,is_for_sale=0,quantity=1)
-    @@counter+=1
+    lines = File.readlines("csv_files/products.csv")
+    @@counter = lines[-1].split(",")[2].to_i+1
     @product_name = product_name.downcase
     @category = category.downcase
     @product_no = @@counter
@@ -18,7 +18,7 @@ extend ProductMod
     @color = color.downcase
     @description = description
     @is_for_sale = is_for_sale
-    @quantity = quantity
+    @quantity = quantity.to_i
   end
   def display
     puts "Product Name : #{product_name}, Price : #{price}, Color = #{color}, Size : #{size},  Description : #{description}, Product No : #{product_no}"

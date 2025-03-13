@@ -2,112 +2,272 @@ require_relative 'classes/product'
 require_relative 'classes/user'
 require_relative 'classes/category'
 require_relative 'classes/cart'
+require_relative 'classes/order'
 
-products =[
-
-]
-
-
-categories = [
-# Category.new("jeans"),
-# Category.new("t-shirt"),
-# Category.new("shoes")
-]
-users = [
-# User.new("mohit","mohit@gmail.com","M","pass1"),
-# User.new("admin","admin@gmail.com","M","admin1","admin")          
-]
 orders = []
 cart = []
 
-def user_dashboard(products,categories,users,cart)
-  c=0
+def user_dashboard(cart,orders,person)
   while(1)
-    puts "\nSearch product: 1\nProduct Listings: 2\nFilter Products: 3\nadd to cart: 4\nshow cart: 5\norder checkout: 6\nLog Out: 7"
+    puts "\nWelcome To Main Menu - "
+    puts "\nSearch product: 1\nProduct Listings: 2\nshow cart: 3\norder checkout: 4\nLog Out: 5\nOrder History : 6\nPersonal Information : 7"
     print "\nEnter your choice : "
     user_choice = gets.chomp
+    c=0
     case user_choice
       when "1"
-       Category.product_search
+        while(1)
+          Category.product_search if c == 0 
+          puts "Add to cart: 1\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "1" 
+              Cart.add_to_cart(cart,person)
+              c+=1
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+       
       when "2" 
-        ProductClass.product_on_sale
-      when "3" 
-        Category.product_filter
+        while(1)
+          ProductClass.product_listnings if c == 0 
+          puts "Add to cart: 1\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "1" 
+              Cart.add_to_cart(cart,person)
+              c+=1
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+        
+      when "3"
+        while(1)
+          Cart.show_cart(cart) if c == 0 
+          puts "\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+        
       when "4"
-        Cart.add_to_cart
+        while(1)
+          Cart.checkout(cart,orders) if c == 0 
+          cart = []
+          puts "\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
       when "5"
-        Cart.show_cart(cart)
-      when "6"
-        Cart.checkout(cart,orders,products)
-      when "7"
         print "you logged out"
         return
+      when "6"
+        while(1)
+          Order.order_history(orders) if c == 0 
+          puts "\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+      when "7"
+        while(1)
+          person.display_user if c == 0 
+          puts "\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
       else
+        cart = []
+        orders = []
         c+=1
         puts "invalid request"
     end
     if c==4
       puts "logged out! because you crossed the limit of input\n"
-      return
+      return  puts "\nWelcome to e-commerce website"
+
     end
   end
 end
 
-def admin_dashboard(products,categories)
-  c=0
+def admin_dashboard
   while(1)
-    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nshow products : 5\nDelete product : 6\nLog Out : 7\nAdd Category : 8"
+    puts "\nAdd product : 1\nShow categories : 2\nShow users : 3\nshow products : 5\nDelete product : 6\nLog Out : 7\nAdd Category : 8\n "
     print "please enter your choice : "
     admin_choice = gets.chomp
+    c=0
     case admin_choice
-      when "1" then ProductClass.add_product
-      when "2" then Category.display_categories
-      when "3" then User.show_users
-      # when "4" then ProductClass.edit_product_value
-      when "5" then ProductClass.show_products
-      when "6" then ProductClass.delete_product
+      when "1" 
+        while(1)
+          ProductClass.add_product if c == 0 
+          puts "Add More product: 1\nBack to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "1" 
+              ProductClass.add_product
+              c+=1
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end
+        end
+      when "2" 
+        while(1)
+          Category.display_categories if c == 0 
+          puts "Back to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end
+        end
+      when "3" 
+        while(1)  puts "\nWelcome to e-commerce website"
+
+          User.show_users if c == 0 
+          puts "Back to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+      when "5"
+        while(1)
+          ProductClass.show_products if c == 0 
+          puts "Back to main menu: 0"
+          puts "\nEnter your Choice : "
+          input = gets.chomp
+          case input
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
+      when "6"
+        while(1)
+          ProductClass.delete_product if c == 0 
+          puts "Delete More product: 1\nBack to main menu: 0"
+          input = gets.chomp
+          case input
+            when "1" 
+              Prod  puts "\nWelcome to e-commerce website"
+              uctClass.delete_product
+              c+=1
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end  
+        end
       when "7"
-        print "you logged out"
+ 
+        print "\nyou lo  puts "\nWelcome to e-commerce website"
+gged out\n"
         return
-      when "8" then Category.add_category
+      when "8" 
+        while(1)
+          Category.add_category if c == 0 
+          puts "Add More Category: 1\nBack to main menu: 0"
+          input = gets.chomp
+          case input
+            when "1" 
+              Category.add_category
+              c+=1
+            when "0" then break
+            else
+              c+=1
+              puts "invalid input"
+          end 
+        end
       else
-        c+=1
         puts "\ninvalid choice, please try again \n"
-    end
-    if c==4
-      puts "logged out! because you crossed the limit of input\n"
-      return 
     end
   end
 end
 
-
+choice
 while(1)
-  puts "Welcome to e-commerce website"
+  puts "\nWelcome to e-commerce website"
   puts "login your account: 1\nRegister New User: 2\nCreate new admin account: 3"
   print "\nEnter your choice : "
   choice = gets.chomp
   case choice
     when "1" 
-      role = User.login
-      if(role=="user")
-        user_dashboard(products,categories,users,cart)
-      elsif(role=="admin")
-        admin_dashboard(products,categories)
+      person = User.login
+      if(person&.role=="user")
+        puts "\nLogin successful!"
+        user_dashboard(cart,orders,person)
+      elsif(person&.role=="admin")
+        admin_dashboard
       else
-        puts "you can not login"
+        puts "you can not login\n"
       end
     when "2" 
-      User.register("user")
-      user_dashboard(products,categories,users,cart)
+      person = User.register("user")
+      if person!=0
+        puts "\nRegistered Successful!"
+        user_dashboard(cart,orders,person) 
+      else
+        puts "\n User Not registered!"
+      end
     when "3" 
       key = "xyz"
-      print "Enter password to create user: "
-      input_key = gets.chomp
-      if input_key!=key
-        print "invalid password" 
-      else
-      User.register("admin") 
+      c=0
+      while(1)
+        print "Enter password to create Admin: "
+        input_key = gets.chomp
+        if input_key!=key
+          c+=1
+          if c==3
+            puts "max attempt limit exceeded try again later - "
+            break
+          end
+          print "incorrect password try again - " 
+        elsepassword
+        output = User.register("admin")
+        puts "Admin Registered Successfully!" if output != 0
+        break 
+        end
       end
     else 
       puts "invalid choice, please try again \n"

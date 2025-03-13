@@ -1,13 +1,14 @@
 module UserMod
-  def register(role)
+  def register(role_input)
     pass = 
     cp = 
     gender = 
+    c = 0
     while(1)
       print "Enter User Name : "
-      name = gets.chomp
-      break if(name.length!=0)
-      print "Invalid name, please try again - "
+      input_name = gets.chomp
+      break if(input_name.length!=0 && input_name.match?(/[a-zA-Z ]/))
+      print "Name field could not be empty or invalid , please try again - \n"
     end
     while(1)
       print "Enter Email address : "
@@ -22,6 +23,7 @@ module UserMod
             a= false
           end
         end
+        aFile.close
       end
       # user_found = users.find {|user| user.email == email}
       break if(input_email.match?(/\A([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})\z/i) && a==true)
@@ -32,52 +34,77 @@ module UserMod
       print "Enter gender M(male)/F(female): "
       gender = gets.chomp.downcase
       break if(gender=="m" || gender=="f")
-      print "Invalid selection, please try again - "
+      print "Invalid selection, please try again - \n"
     end
-
+    flag = true
     while(1)
-      while(1)
+      while(flag) 
         print "Enter Password : "
         pass = gets.chomp
         break if(pass.length>=5)     
-        puts "password length must be 5" 
+        puts "password length must be 5\n" 
       end
       print "Confirm Password : "
       cp = gets.chomp
       print "password and confirm password not matching try again - " if(pass!=cp)
       break if(pass==cp && pass!='' && cp!='')
+      c+=1
+      if c==3
+        puts "\nmax attempt limit exceeded try again letter - "
+        return 0
+      end
+      flag = false
     end
 
-    user = User.new(name,email,gender,pass,role)
+      user = User.new(input_name,input_email,gender,pass,role_input)
 
-    aFile = File.open("users.csv", 'a+')
-
-    if aFile
-      values = user.write_in_file
-      aFile.puts values
-    end
+      aFile = File.open("csv_files/users.csv","a+")
+      if aFile
+        values = user.write_in_file
+        aFile.puts values
+      end
+      aFile.close
+    user
   end
 
   def login()
-    print "Enter email : "
-    input_email = gets.chomp
-    print "Enter password : "
-    input_pass = gets.chomp
     lines = File.readlines("csv_files/users.csv")
-    File.open("csv_files/users.csv","r") do |file|
+    c = 0
+    while(1)
+      flag = false
+      print "Enter email : "
+      input_email = gets.chomp
+      c+=1
       lines.each do |line|
-        name,email,gender,pass,role = line.chomp.split(",")
-        if email == input_email && pass.to_s == input_pass
-          return role 
+        name,email =  line.chomp.split(",")
+        flag = true if email == input_email 
+      end
+      if c==3
+        return puts "max attempt limit exceeded try again letter - "
+      elsif flag == true
+        break
+      end
+      puts "email not registered! register yourself first" 
+    end
+    c=0
+    while(1)
+      print "Enter password : "
+      input_pass = gets.chomp
+      File.open("csv_files/users.csv","r") do |file|
+        lines.each do |line|
+          name,email,gender,pass,role = line.chomp.split(",")
+          if email == input_email && pass.to_s == input_pass
+            return User.new(name,email,gender,pass,role)
+          end
         end
+        if c==3
+          return puts "max attempt limit exceeded try again letter - " 
+        end
+        puts "wrong password try again you have only #{3-c} attempts."
+        c+=1
       end
     end
   end 
-
-  def manage_profile(user)
-    user.display if user.role=="user"
-    # puts "what do you want to update : "
-  end
 
   def show_users
     puts "user's list"
@@ -85,7 +112,7 @@ module UserMod
     File.open("csv_files/users.csv","r") do |file|
       lines.each do |line|
         name,email,gender,pass,role = line.chomp.split(",")
-        puts "Name: #{name}, Email: #{email}, Gender: #{gender}"
+        puts "Name: #{name}, Email: #{email}, Gender: #{gender}" if role=="user"
       end
     end
   end

@@ -1,6 +1,6 @@
 module CartMod
 
-  def add_to_cart
+  def add_to_cart(cart,user)
     # _product_no = 
     while(1)
       print "Enter the product number to add to the cart: "
@@ -13,7 +13,7 @@ module CartMod
           product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
           if product_no == inp_product_no
             flag = true
-            quantity_check(quantity,product_no,product_name,price)
+            added = quantity_check(quantity,product_no,product_name,price,cart,user)
             break
           end
         end
@@ -25,56 +25,74 @@ module CartMod
       end
     end
   end
-  def quantity_check(quant,product_no,product_name,price)
+  def quantity_check(quant,product_no,product_name,price,cart,user)
     while(1)
       print "Enter the quantity: "
       quantity = gets.chomp
-      break if(quant >= quantity && quantity.match?(/[0-9]/) )
-      print "#{quantity.nil? ? 'decrease quantity limit, out of stock, try again - ':'wrong input, try again - ' }\n"
+      
+      
+      if(quantity.to_i <= 0 )
+        puts "Warning: Quantity could not be 0, Negative , empty, or character only digits allowed - "
+        redo
+      elsif(quant.to_i >= quantity.to_i && quantity.match?(/[0-9]/)) 
+        break
+      else
+        puts quantity.nil? ? 'Wrong input, try again - ' : "Sorry, we only have #{quant} items in stock. Please adjust your quantity to match the available stock."
+      end
     end
-    product = Cart.new(product_no,quantity,product_name,price)
+    
+    
+    product = Cart.new(product_no,quantity,product_name,price,user.user_id)
+    cart.push(product)
+    
     File.open("csv_files/cart.csv","a+") do |file|
-      file.puts product.write_in_file
+      file.puts product
       puts "Product added to the cart"
+      file.close
     end
   end
 
-  def show_cart
+  def show_cart(cart)
     puts "\nCart:"
+    puts "Your Cart Is Empty -" if cart.length==0
     cart.each do |product|
       product.display
     end
   end
 
-  def checkout(cart,orders,products)
-    while(1)
-      print "shipping address : "
-      shipping_address = gets.chomp
-      break if shipping_address!=nil
-      print "shipping address could not be empty - "
+  def checkout(cart,orders)
+    if cart.length==0
+      puts "cart is empty, No Orders in the cart to proceed - "
+      return 
     end
     while(1)
       print "shipping address : "
+      shipping_address = gets.chomp
+      break if shipping_address!=""
+      print "shipping address could not be empty - "
+    end
+    while(1)
+      print "City : "
       city = gets.chomp
-      break if city!=nil
+      break if city!=""
       print "city could not be empty - "
     end
     while(1)
       print "state : "
       state = gets.chomp
-      break if state!=nil
+      break if state!=""
       print "state could not be empty - "
     end
     while(1)
       print "zip : "
       zip = gets.chomp
-      break if zip.match?(/^\d{5}(-\d{4})?$/)
+      break if zip.match?(/^\d{6}$/)
       print "invalid zip code or it could not be empty - "
     end
     while(1)
       print "Enter your credit card number : "
       card_no = gets.chomp
-      break if card_no.match?(/^\d{4} \d{4} \d{4} \d{4}$/)
+      break if card_no.match?(/^\d{4}\d{4}\d{4}\d{4}$/)
       print "invalid credit card number or it could not be empty - "
     end
     while(1)
@@ -89,39 +107,81 @@ module CartMod
       break if cvv_no.match?(/^\d{3}$/)
       print "invalid cvv no. or it could not be empty - "
     end
-    lines = File.readlines("csv_files/cart.csv")
-    aFile = File.open("csv_files/cart.csv","r+")
-    order_product_no_arr = []
-    if aFile
+
+    # lines = File.readlines("csv_files/cart.csv")
+    # aFile = File.open("csv_files/cart.csv","r+")
+    # order_product_no_arr = []
+    # if aFile
+    #   lines.each do |line|
+    #     product_no,quantity,product_name,price = line.chomp.split(",")
+    #     puts quantity , quantity.class
+    #     order_product_no_arr.push({"product_no"=>product_no,"quant"=>quantity})
+    #   end
+    # end
+    # b_lines = File.readlines("csv_files/products.csv")
+    # bFile = File.open("csv_files/products.csv","r+")
+    # i=0
+    # total_amount=0
+
+    # if bFile
+      # b_lines.each do |line|
+      #   while(i<order_product_no_arr.length)
+      #     product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity = line.chomp.split(",")
+      #     if order_product_no_arr[i]["product_no"].to_s == product_no.to_s
+      #       quantity -= order_product_no_arr["quant"].to_i
+      #       total_amount+=price
+      #       aFile.puts line if quantity!=0
+      #     else
+      #       aFile.puts line
+      #     end
+      #     i+=1
+      #   end
+      #   Order.new(total_amount)
+      # end
+    # end
+    
+    # lines = File.readlines("csv_files/products.csv")
+    # File.open("csv_files/products.csv","w+") do |file|
+    #   lines.each do |line|
+    #     product_name,category,product_no = line.chomp.split(",")
+    #     if product_no != inp_product_no
+    #       file.puts line 
+    #     else
+    #       deleted_element = true
+    #     end
+    #   end
+    # end
+
+    total_amount = 0
+
+    lines = File.readlines("csv_files/products.csv")
+    
+    cart.each do |order|
+      file = File.open("csv_files/products.csv","w+")
+      pr_no = order.product_no
+      qu = order.quantity
       lines.each do |line|
-        product_no,quantity,product_name,price = line.chomp.split(",")
-        order_product_no_arr.push({"product_no"=>product_no,"quant"=>quantity})
-      end
-    end
-    bFile = File.open("csv_files/products.csv","w+")
-    b_lines = File.readlines("csv_files/products.csv")
-    total_amount=0
-    if bFile
-      b_lines.each do |line|
-        while(i<order_product_no_arr.length)
-          product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity = line.chomp.split(",")
-          if order_product_no_arr["product_no"] == product_no
-            quantity -= order_product_no_arr["quant"]
-            total_amount+=price
-            aFile.puts line if quantity!=0
-          else
-            aFile.puts line
-          end
+        product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+        if pr_no == product_no
+          total_amount+=price.to_i*qu.to_i
+          quantity=quantity.to_i-qu.to_i
+          file.puts [product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity].join(",") if quantity.to_i!=0
+        elsif(quantity!=0)
+          file.puts [product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity].join(",")
         end
       end
+      file.close
     end
-    # order_product_no_arr = cart.select {|product| product.product_no }
-    
-    # puts order_product_no_arr
-
-    # order = Order.new()
-    # orders.push()
-
+    order = Order.new(total_amount)
+    orders.push(order)
+    puts order.show_order
+    aFile = File.open("csv_files/orders.csv","r+")
+    if aFile
+      aFile.puts order.show_order
+    end
+    aFile.close
+    puts "Order placed successfully! Order ID: #{order.order_id} "
+    cart = []
   end
 
 end
