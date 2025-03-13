@@ -63,7 +63,7 @@ module ProductMod
     puts "\nProduct added successfully - "
   end
 
-  def product_listnings
+  def product_listings
     lines = File.readlines("csv_files/products.csv")
     File.open("csv_files/products.csv","r") do |file|
       if lines.length!=0

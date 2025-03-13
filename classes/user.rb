@@ -13,6 +13,7 @@ class User
     @pass = pass
     @role = role
     @user_id = @@id
+    @cart = []
   end
   
   def display_user
@@ -21,6 +22,14 @@ class User
 
   def write_in_file
     "#{name},#{email},#{gender},#{pass},#{role},#{user_id}"
+  end
+
+  def show_cart(cart)
+    puts "\nCart:"
+    puts "Your Cart Is Empty -" if cart.length==0
+    cart.each do |product|
+      product.display
+    end
   end
 end
 

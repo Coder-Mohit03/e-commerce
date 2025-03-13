@@ -69,24 +69,24 @@ module UserMod
 
   def login()
     lines = File.readlines("csv_files/users.csv")
-    c = 0
+    count = 0
     while(1)
       flag = false
       print "Enter email : "
       input_email = gets.chomp
-      c+=1
+      count+=1
       lines.each do |line|
         name,email =  line.chomp.split(",")
         flag = true if email == input_email 
       end
-      if c==3
+      if count==3
         return puts "max attempt limit exceeded try again letter - "
       elsif flag == true
         break
       end
       puts "email not registered! register yourself first" 
     end
-    c=0
+    count=0
     while(1)
       print "Enter password : "
       input_pass = gets.chomp
@@ -97,11 +97,11 @@ module UserMod
             return User.new(name,email,gender,pass,role)
           end
         end
-        if c==3
+        if count==3
           return puts "max attempt limit exceeded try again letter - " 
         end
         puts "wrong password try again you have only #{3-c} attempts."
-        c+=1
+        count+=1
       end
     end
   end 
@@ -116,7 +116,4 @@ module UserMod
       end
     end
   end
-
-  
-
 end

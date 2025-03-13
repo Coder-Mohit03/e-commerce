@@ -10,7 +10,7 @@ cart = []
 def manage_cart(person,cart)
   lines = File.readlines("csv_files/cart.csv")
   lines.each do |line|
-   if line[4].to_i == person.user_id
+   if line.split(",")[4].to_i == person.user_id
     new_product =  Cart.new(line.chomp)
     puts new_product
     cart.push(new_product)
@@ -65,7 +65,7 @@ def user_dashboard(cart,orders,person)
         
       when "3"
         while(1)
-          Cart.show_cart(cart) if count == 0 
+          person.show_cart(cart) if count == 0 
           puts "\nBack to main menu: 0"
           puts "\nEnter your Choice : "
           input = gets.chomp
