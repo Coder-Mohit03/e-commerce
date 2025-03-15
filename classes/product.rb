@@ -6,18 +6,21 @@ class ProductClass
 extend ProductMod
   attr_accessor :product_name,:category,:product_no,:brand,:size,:color,:price,:description,:is_for_sale,:quantity
   
-  def initialize(product_name,category,price,brand,size,color,description,is_for_sale=0,quantity=1)
+  def initialize(product_name,category,price,brand,size,color,description,quantity=1)
     lines = File.readlines("csv_files/products.csv")
-    @@counter = lines[-1].split(",")[2].to_i+1
+    if lines.length!=0 
+      counter = lines[-1].split(",")[2].to_i+1
+    else
+      counter = 1
+    end 
     @product_name = product_name.downcase
     @category = category.downcase
-    @product_no = @@counter
+    @product_no = counter
     @price = price.to_i
     @brand = brand.downcase
     @size = size
     @color = color.downcase
     @description = description
-    @is_for_sale = is_for_sale
     @quantity = quantity.to_i
   end
   def display
@@ -46,7 +49,7 @@ extend ProductMod
   end
 
   def write_in_file
-    "#{product_name},#{category},#{product_no},#{price},#{brand},#{size},#{color},#{description},#{is_for_sale},#{quantity}"
+    "#{product_name},#{category},#{product_no},#{price},#{brand},#{size},#{color},#{description},#{quantity}"
   end
 end
 

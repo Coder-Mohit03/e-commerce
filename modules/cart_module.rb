@@ -1,6 +1,6 @@
 module CartMod
 
-  def add_to_cart(cart,user)
+  def add_to_cart(user)
     # _product_no = 
     while(1)
       print "Enter the product number to add to the cart: "
@@ -10,10 +10,10 @@ module CartMod
       aFile = File.open("csv_files/products.csv","r+")
       if aFile
         lines.each do |line|
-          product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+          product_name,category,product_no,price,brand,size,color,description,quantity =  line.chomp.split(",")
           if product_no == inp_product_no
             flag = true
-            added = quantity_check(quantity,product_no,product_name,price,cart,user)
+            added = quantity_check_and_add_to_cart(quantity,product_no,product_name,price,user)
             break
           end
         end
@@ -25,14 +25,12 @@ module CartMod
       end
     end
   end
-  def quantity_check(quant,product_no,product_name,price,cart,user)
+  def quantity_check_and_add_to_cart(quant,product_no,product_name,price,user)
     while(1)
       print "Enter the quantity: "
       quantity = gets.chomp
-      
-      
       if(quantity.to_i <= 0 )
-        puts "Warning: Quantity could not be 0, Negative , empty, or character only digits allowed - "
+        puts "Warning: Quantity could not be 0, Negative, empty or any character, only digits allowed - "
         redo
       elsif(quant.to_i >= quantity.to_i && quantity.match?(/[0-9]/)) 
         break
@@ -43,20 +41,12 @@ module CartMod
     
     
     product = Cart.new(product_no,quantity,product_name,price,user.user_id)
-    cart.push(product)
+    user.cart.push(product)
     
     File.open("csv_files/cart.csv","a+") do |file|
-      file.puts product
+      file.puts product.write_in_file
       puts "Product added to the cart"
       file.close
-    end
-  end
-
-  def show_cart(cart)
-    puts "\nCart:"
-    puts "Your Cart Is Empty -" if cart.length==0
-    cart.each do |product|
-      product.display
     end
   end
 
@@ -161,13 +151,13 @@ module CartMod
       pr_no = order.product_no
       qu = order.quantity
       lines.each do |line|
-        product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+        product_name,category,product_no,price,brand,size,color,description,quantity =  line.chomp.split(",")
         if pr_no == product_no
           total_amount+=price.to_i*qu.to_i
           quantity=quantity.to_i-qu.to_i
-          file.puts [product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity].join(",") if quantity.to_i!=0
+          file.puts [product_name,category,product_no,price,brand,size,color,description,quantity].join(",") if quantity.to_i!=0
         elsif(quantity!=0)
-          file.puts [product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity].join(",")
+          file.puts [product_name,category,product_no,price,brand,size,color,description,quantity].join(",")
         end
       end
       file.close

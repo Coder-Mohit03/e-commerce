@@ -12,7 +12,7 @@ module ProductMod
       end
       aFile.close
     end
-    list = {"product Name"=>nil,"Category"=>nil,"Price"=>nil,"Brand"=>nil,"Size"=>nil,"Color"=>nil,"Description"=>nil}
+    list = {"product Name"=>nil,"Category"=>nil,"Price"=>nil,"Brand"=>nil,"Size"=>nil,"Color"=>nil,"Description"=>nil,"Quantity"=>nil}
     i=0
     keys = list.keys
     while(i<keys.length)
@@ -20,6 +20,9 @@ module ProductMod
       list["#{keys[i]}"] = gets.chomp
       if(list["#{keys[i]}"]=="")
         puts "warning :Field can not be empty - "
+        redo
+      elsif(keys[i] == "Quantity" && !list[keys[i]].match(/[0-9]/))
+        puts "Warning : Invalid Quantity -"
         redo
       elsif(keys[i]=="Size" && !list["#{keys[i]}"].match(/^\d{1,2}$/))
         puts "\nwarning : invalid size only 1 or 2 digits allowed - "
@@ -72,7 +75,7 @@ module ProductMod
         puts "Sorry, No products available right now"
       end
       lines.each do |line|
-        product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+        product_name,category,product_no,price,brand,size,color,description,quantity =  line.chomp.split(",")
           puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}" 
         # puts line
       end
@@ -86,7 +89,7 @@ module ProductMod
       lines = File.readlines("csv_files/products.csv")
       File.open("csv_files/products.csv","r+") do |file|
         lines.each do |line|
-          product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+          product_name,category,product_no,price,brand,size,color,description,quantity =  line.chomp.split(",")
           if inp_product_no==product_no
             print "what do you want to update from the product: "
               update_key = gets.chomp
@@ -123,7 +126,7 @@ module ProductMod
     lines = File.readlines("csv_files/products.csv")
     File.open("csv_files/products.csv","r+") do |file|
       lines.each do |line|
-        product_name,category,product_no,price,brand,size,color,description,is_for_sale,quantity =  line.chomp.split(",")
+        product_name,category,product_no,price,brand,size,color,description,quantity =  line.chomp.split(",")
           puts "Product Name: #{product_name}, Category: #{category}, Product No. #{product_no}, Price: #{price}, Size #{size}, Color: #{color}, Product Description: #{description}, Quantity: #{quantity}" 
       end
     end

@@ -11,12 +11,12 @@ class Cart
     @user_id = user_id
   end
 
-  def display
+  def display_product
     print "product : #{product_name}, Quantity : #{quantity}, price : #{price}"
   end
 
   def write_in_file
-    "#{product_no},#{quantity},#{product_name},#{price}"
+    "#{product_no},#{quantity},#{product_name},#{price},#{user_id}"
   end
 
 end
