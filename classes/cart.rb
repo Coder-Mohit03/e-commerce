@@ -12,7 +12,7 @@ class Cart
   end
 
   def display_product
-    print "product : #{product_name}, Quantity : #{quantity}, price : #{price}"
+    print "product : #{product_name}, Quantity : #{quantity}, price : #{price}\n"
   end
 
   def write_in_file
@@ -22,4 +22,3 @@ class Cart
 end
 
   
-cart = []

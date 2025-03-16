@@ -3,19 +3,7 @@ require_relative 'classes/user'
 require_relative 'classes/category'
 require_relative 'classes/cart'
 require_relative 'classes/order'
-
-orders = []
-
-def manage_cart(person)
-  lines = File.readlines("csv_files/cart.csv")
-  lines.each do |line|
-   if line.chomp.split(",")[4].to_i == person.user_id.to_i
-    new_product =  Cart.new(*line.chomp.split(","))
-    person.cart.push(new_product)
-   end
-  end
-end
-
+require_relative 'modules/admin_module'
 
 
 while(1)
@@ -29,9 +17,9 @@ while(1)
       puts person
       if(person&.role=="user")
         puts "\nLogin successful!"
-        User.user_dashboard(orders,person)
+        User.user_dashboard(person)
       elsif(person&.role=="admin")
-        User.admin_dashboard
+        Admin.admin_dashboard
       else
         puts "you can not login\n"
       end
@@ -39,7 +27,7 @@ while(1)
       person = User.register("user")
       if person!=0
         puts "\nRegistered Successful!"
-        User.user_dashboard(orders,person) 
+        User.user_dashboard(person) 
       else
         puts "\n User Not registered!"
       end
